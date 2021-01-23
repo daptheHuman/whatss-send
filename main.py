@@ -4,13 +4,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from profiles import CHROME_USER_PROFILES, username  # import profiles
 import time
 
+
 # open the browser (chrome)
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_argument(CHROME_USER_PROFILES)
+
+driver = webdriver.Chrome(executable_path=f'Users/{username}/chromedriver/chromedriver', options=options)
 driver.maximize_window()
 driver.get("https://web.whatsapp.com/")
 wait = WebDriverWait(driver, 10)
+
 
 # QR SCAN
 print("SCAN BARCODE, Click Enter When You Done.")
@@ -49,11 +55,10 @@ while repeat:
         print('Total ' + str(amount) + ' messages has sent!')
 
     # loop back
-    resend = input('send another messages?' 'Y/N?')
+    resend = input('send another messages?  ' '(Y/N)')
     if resend.lower() == "y":
         repeat = True
     elif resend.lower() == 'n':
         repeat = False
     else:
-        resend
-
+        print(resend)
