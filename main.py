@@ -28,9 +28,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 from profiles import CHROME_USER_PROFILES
 from profiles import username  # import profiles
 import time
+
 
 
 # open the browser (chrome)
@@ -52,7 +54,7 @@ input()
 
 # LOOP DATA
 repeat = True
-while repeat:
+while True:
     names = input('enter the name of user ')
     msg = input('enter your message ')
     amount = int(input("enter the amount "))
@@ -63,11 +65,20 @@ while repeat:
     cntct_box_search.click()
     cntct_box_search.send_keys(names)
     time.sleep(5)
-    print("contact found!")  # contact finder
+    print("Please wait, finding contact")  # contact finder
     time.sleep(2)
 
-    selected_contact = wait.until(
-        EC.visibility_of_element_located((By.XPATH, '//span[@title = "{}"]'.format(names.title()))))
+#Timeout/Not Found Exception
+    try:
+        global selected_contact
+        selected_contact = wait.until(
+            EC.visibility_of_element_located((By.XPATH, '//span[@title = "{}"]'.format(names.title()))))
+    except TimeoutException:
+        print("not found")
+        continue
+    else:
+        pass
+
     print('contact selected')  # contact selector
     selected_contact.click()
     time.sleep(2)
@@ -85,6 +96,7 @@ while repeat:
         print("ONLY Y/N")
         resend = input('send another messages?  (Y/N)').lower()
     if resend.lower() == "y":
-        repeat = True
+        continue
     else:
-        repeat = False
+        print('thx')
+        break
